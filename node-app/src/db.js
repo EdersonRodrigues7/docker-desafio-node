@@ -13,10 +13,10 @@ async function connectWithRetry(retries = maxRetries) {
             port: process.env.DB_PORT
         });
 
-        console.log('Successfully connected to MySQL database');
+        console.log('MySQL database: success!');
         return connection;
     } catch (err) {
-        console.error('Error connecting to the database:', err.message);
+        console.error('Error connecting to the MySQL database:', err.message);
         
         if (retries > 0) {
             console.log(`Retrying in ${retryInterval/1000} seconds... (${retries} attempts remaining)`);
@@ -24,7 +24,7 @@ async function connectWithRetry(retries = maxRetries) {
             return connectWithRetry(retries - 1);
         }
         
-        throw new Error('Failed to connect to database after multiple attempts');
+        throw new Error('Failed to connect to MySQL database');
     }
 }
 

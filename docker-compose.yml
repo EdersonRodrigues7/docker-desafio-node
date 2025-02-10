@@ -38,7 +38,7 @@ services:
       - /usr/src/app/node_modules
   nginx:
     build:
-      context: ./nginx  # Directory containing Nginx configuration
+      context: ./nginx
       dockerfile: Dockerfile
     container_name: nginx_ederson
     restart: unless-stopped
