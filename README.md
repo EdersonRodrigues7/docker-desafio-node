@@ -7,7 +7,7 @@ O objetivo do desafio é aplicar os conceitos aprendidos sobre docker compose pa
 Basicamente, deve ser possível acessar a aplicação node através da porta exposta pelo nginx e receber como resposta uma página com "Full Cycle Rocks!" e uma lista de nomes cadastrados no banco de dados.
 
 ### Como utilizar
-Basta baixar o projeto, criar um arquivo ".env" na pasta raiz com base no ".env.example" e executar o comando `docker-compose up --build`.
+Basta baixar o projeto, criar um arquivo ".env" na pasta raiz com base no ".env.example" e executar o comando `docker-compose up -d --build`.
 
 ### Serviço MySQL
 A configuração do banco de dados utiliza a imagem do mysql 8, define as credenciais com base em variáveis de ambiente e cria um volume para fins de desenvolvimento. Também foi criado um script SQL inicial para criar o database e a tabela "people", mapeando-o da pasta mysql para o entrypoint do docker.
@@ -38,6 +38,7 @@ node_app:
       context: ./node-app
       dockerfile: Dockerfile
     container_name: node_app
+    entrypoint: dockerize -wait tcp://mysql-db:3306 -timeout 30s node src/index.js
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
@@ -63,7 +64,8 @@ O fluxo fica da seguinte forma:
 - O servidor é iniciado, chamando a função de conexão com o banco de dados;
 - A função carrega as credenciais das variáveis de ambiente e faz até 5 tentativas de conexão;
 - Quando o endpoint é chamado, utiliza a conexão para fazer a consulta dos nomes.
-Atualização: foi adicionada a dependência do container node js com o serviço mysql.
+
+Atualização: foi adicionada a dependência do container node js com o serviço mysql, utilizando o "depends_on" no docker-compose, além do dockerize para garantir que o app só irá subir quando o banco de dados estiver disponível.
 ### Serviço Nginx
 O serviço foi configurado sem grandes alterações no padrão do Dockerfile ou do docker-compose.
 ```
