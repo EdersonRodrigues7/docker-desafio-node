@@ -20,8 +20,7 @@ services:
       context: ./node-app
       dockerfile: Dockerfile
     container_name: node_app
-    entrypoint: dockerize -wait tcp://mysql-db:3306 -timeout 30s docker-entrypoint.sh
-    restart: unless-stopped
+    entrypoint: dockerize -wait tcp://mysql-db:3306 -timeout 30s node src/index.js
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${APP_PORT:-3000}
