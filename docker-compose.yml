@@ -31,6 +31,8 @@ services:
       DB_PORT: ${DB_PORT}
     ports:
       - "${APP_PORT:-3000}:3000"
+    depends_on:
+      - mysql
     networks:
       - fullcycle
     volumes:
